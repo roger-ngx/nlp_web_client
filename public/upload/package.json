@@ -1,0 +1,76 @@
+{
+  "_from": "popbill@1.21.0",
+  "_id": "popbill@1.21.0",
+  "_inBundle": false,
+  "_integrity": "sha512-1nk9js111npQCJ/xsu/dcC3KawObg8qD5NsX1PU5miDF0loHQNmcefRKVFAPbJQ50BfPKNANnCvrG0SczdXStQ==",
+  "_location": "/popbill",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "popbill@1.21.0",
+    "name": "popbill",
+    "escapedName": "popbill",
+    "rawSpec": "1.21.0",
+    "saveSpec": null,
+    "fetchSpec": "1.21.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/popbill/-/popbill-1.21.0.tgz",
+  "_shasum": "de5eaa00317fafb53948872338706ac26a1bcc24",
+  "_spec": "popbill@1.21.0",
+  "_where": "/Users/thanhnguyen/Downloads/[링크허브] 팝빌 연동서비스 [Node.js] SDK",
+  "author": {
+    "name": "Kim Seongjun",
+    "email": "pallet027@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/linkhub-sdk/node-popbill/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "Kim Seongjun",
+      "email": "pallet027@gmail.com"
+    },
+    {
+      "name": "JeongYohan",
+      "email": "code@linkhub.co.kr"
+    }
+  ],
+  "dependencies": {
+    "linkhub": "^1.4.2",
+    "sync-request": "^2.0.0"
+  },
+  "deprecated": false,
+  "description": "Popbill API SDK for node. see www.popbill.com",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "homepage": "https://github.com/linkhub-sdk/node-popbill#readme",
+  "keywords": [
+    "popbill",
+    "taxinvoice",
+    "cashbill",
+    "statement",
+    "closedown",
+    "hometax",
+    "SMS",
+    "KakaoTalk",
+    "FAX",
+    "api",
+    "sdk"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "popbill",
+  "preferGlobal": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linkhub-sdk/node-popbill.git"
+  },
+  "subdomain": "popbill",
+  "version": "1.21.0"
+}
