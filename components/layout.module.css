@@ -5,9 +5,12 @@
 }
 
 .content {
-  max-width: 90%;
-  /* padding: 0 1rem; */
-  /* margin: 3rem auto 6rem; */
+  padding: 0 5%;
+  height: 100vh;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items: center */
 }
   
 .header {

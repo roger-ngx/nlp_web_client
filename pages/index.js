@@ -1,73 +1,51 @@
 import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
+import { useRouter } from 'next/router';
 
 import utilStyles from '../styles/utils.module.scss';
 import Layout from '../components/layout';
+import SocialLoginButton from '../components/SocialLoginButton';
 
-export default function Home() {
+export default function Login() {
 
-  const [ selectedType, setSelectedType ] = useState();
+  const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+  console.log('GOOGLE_CLIENT_ID', GOOGLE_CLIENT_ID);
+  const router = useRouter();
+
+  const handleSocialLogin = user =>  router.push('/home');
+
+  const handleSocialLoginFailure = e =>  console.log(e)
 
   return (
-    <Layout>
-      <Paper style={{width: '60%', margin: 'auto', padding: 20}}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
+    <div
+      style={{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh', width: '100vw'
+      }}
+    >
+      <Paper
+        style={{
+          width: '60%',
+          margin: 'auto',
+          padding: 20,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+          <SocialLoginButton
+            provider='google'
+            appId='75262550263-6ne1rfsalhpnrqsps6938ubguimjbl73.apps.googleusercontent.com'
+            onLoginSuccess={handleSocialLogin}
+            onLoginFailure={handleSocialLoginFailure}
           >
-            <img style={{margin: 'auto'}} src='/icons/project_type.png' />
-            <p style={{textAlign: 'center'}}>Select Project Type</p>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
-            <div
-              className={utilStyles.index__projecttype}
-              onClick={() => setSelectedType('ner')}
-              style={{borderColor: selectedType === 'ner' ? '#4285f4' : '#eee'}}         
-            >
-              <img style={{margin: '0 20px'}}  src='/icons/ner.png' />
-              <p style={{fontSize: 16}}>Pretraining</p>            
-            </div>
-            <div
-              className={utilStyles.index__projecttype}
-              onClick={() => setSelectedType('tc')}
-              style={{borderColor: selectedType === 'tc' ? '#4285f4' : '#eee'}}   
-            >
-              <img style={{margin: '0 20px'}} src='/icons/text_classification.png' />
-              <p style={{fontSize: 16}}>Classification</p>            
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
-            <div
-              className={utilStyles.index__projecttype}
-              onClick={() => setSelectedType('sa')}
-              style={{borderColor: selectedType === 'sa' ? '#4285f4' : '#eee'}}   
-            >
-              <img style={{margin: '0 20px'}}  src='/icons/sentiment_analysis.png' />
-              <p style={{fontSize: 16}}>Named-entity Recognition</p>            
-            </div>
-            <div
-              className={utilStyles.index__projecttype}
-              onClick={() => setSelectedType('rc')}
-              style={{borderColor: selectedType === 'rc' ? '#4285f4' : '#eee'}}
-            >
-              <img style={{margin: '0 20px'}}  src='/icons/review_conversion.png' />
-              <p style={{fontSize: 16}}>Machine Reading Comprehension</p>            
-            </div>
-          </div>
+            Login with Google
+          </SocialLoginButton>
       </Paper>
-    </Layout>
+    </div>
   )
 }
