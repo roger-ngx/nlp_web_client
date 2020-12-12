@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import { useRouter } from 'next/router';
+import { useSelector, useDispatch } from 'react-redux'
+import withRedux from "next-redux-wrapper";
 
 import utilStyles from '../styles/utils.module.scss';
 import Layout from '../components/layout';
 import SocialLoginButton from '../components/SocialLoginButton';
+import { setUser } from '../stores/userSlice';
 
-export default function Login() {
+
+const Login = () => {
+
+  const dispatch = useDispatch();
 
   const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
   console.log('GOOGLE_CLIENT_ID', GOOGLE_CLIENT_ID);
   const router = useRouter();
 
-  const handleSocialLogin = user =>  router.push('/home');
+  const handleSocialLogin = user =>  {
+    dispatch(setUser(user));
+    router.push('/home');
+  };
 
   const handleSocialLoginFailure = e =>  console.log(e)
 
@@ -49,3 +58,9 @@ export default function Login() {
     </div>
   )
 }
+
+export default Login;
+
+// const makeStore = () => store;
+
+// export default withRedux(makeStore)(Login);

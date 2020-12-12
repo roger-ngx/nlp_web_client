@@ -11,21 +11,31 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/data-grid": "^4.0.0-alpha.10",
     "@material-ui/icons": "^4.9.1",
+    "@reduxjs/toolkit": "^1.5.0",
     "express": "^4.17.1",
     "file-system": "^2.2.2",
     "formidable": "^1.2.2",
     "gray-matter": "^4.0.2",
     "http": "0.0.1-security",
+    "lodash": "^4.17.20",
     "micro": "^9.3.4",
     "mongodb": "^3.6.3",
     "next": "^10.0.3",
     "next-connect": "^0.9.1",
+    "next-redux-wrapper": "^6.0.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-redux": "^7.2.2",
     "react-social-login": "^3.4.10",
+    "redux": "^4.0.5",
     "sass": "^1.29.0",
     "socket.io": "^3.0.3",
     "socket.io-client": "^3.0.3",
     "websocket": "^1.0.32"
+  },
+  "devDependencies": {
+    "redux-devtools": "^3.7.0",
+    "redux-devtools-dock-monitor": "^1.2.0",
+    "redux-devtools-log-monitor": "^2.1.0"
   }
 }

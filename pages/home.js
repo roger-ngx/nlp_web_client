@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
+import { connect } from 'react-redux';
 
 import utilStyles from '../styles/utils.module.scss';
 import Layout from '../components/layout';
 
-export default function Home() {
+const Home= ({user}) => {
 
   const [ selectedType, setSelectedType ] = useState();
-
+  console.log(user);
   return (
     <Layout>
       <Paper style={{width: '60%', margin: 'auto', padding: 20}}>
@@ -71,3 +72,9 @@ export default function Home() {
     </Layout>
   )
 }
+
+function mapStateToProps(state){
+  return { user: state.user.value._profile }
+}
+
+export default connect(mapStateToProps)(Home)

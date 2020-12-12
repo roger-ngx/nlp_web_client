@@ -34,7 +34,9 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(3),
+    // padding: theme.spacing(3),
+    marginLeft: drawerWidth,
+    height: '100vh'
   },
 }));
 
@@ -61,13 +63,13 @@ export default function Layout({ children, home }) {
             </ListItem>
           </Link>
 
-          <Link href='/inference'>
+          <Link href='/dataset'>
             <ListItem button style={{height: 60}}>
               <ListItemIcon><Assignment /></ListItemIcon>
             </ListItem>
           </Link>
 
-          <Link href='/models'>
+          <Link href='/experiment'>
             <ListItem button style={{height: 60}}>
               <ListItemIcon><Restore /></ListItemIcon>
             </ListItem>
@@ -87,7 +89,7 @@ export default function Layout({ children, home }) {
         </List>
       </Drawer>
       
-      <main  className={styles.content}>{children}</main>
+      <main  className={classes.content}>{children}</main>
       
     </div>
   )

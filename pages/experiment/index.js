@@ -7,6 +7,7 @@ import Box from '@material-ui/core/Box';
 import Training from './training';
 import Evaluation from './evaluation';
 import Prediction from './prediction';
+import Layout from '../../components/layout';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -34,24 +35,26 @@ const Experiment = () => {
         setValue(newValue);
     };
 
-    return <div>
-        <AppBar position="static">
-            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                <Tab label="Training" />
-                <Tab label="Evaluation" />
-                <Tab label="Prediction" />
-            </Tabs>
-        </AppBar>
-        <TabPanel value={value} index={0}>
-            <Training />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-            <Evaluation />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-            <Prediction />
-        </TabPanel>
-    </div>
+    return (
+      <Layout>
+          <AppBar position="static">
+              <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                  <Tab label="Training" />
+                  <Tab label="Evaluation" />
+                  <Tab label="Prediction" />
+              </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+              <Training />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+              <Evaluation />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+              <Prediction />
+          </TabPanel>
+      </Layout>
+    )
 }
 
 export default Experiment;
