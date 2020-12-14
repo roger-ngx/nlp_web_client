@@ -4,6 +4,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import { connect, useDispatch } from 'react-redux';
+import { map } from 'lodash';
+
 import Training from './training';
 import Evaluation from './evaluation';
 import Prediction from './prediction';
@@ -29,7 +32,9 @@ function TabPanel(props) {
     );
 }
 
-const Experiment = () => {
+const Experiment = ({dataset}) => {
+    const datasetNames = map(dataset, item => item.name);
+
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -45,7 +50,7 @@ const Experiment = () => {
               </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-              <Training />
+              <Training datasetNames={datasetNames}/>
           </TabPanel>
           <TabPanel value={value} index={1}>
               <Evaluation />
@@ -57,4 +62,8 @@ const Experiment = () => {
     )
 }
 
-export default Experiment;
+const mapStateToProps = (state) => ({
+  dataset: state.dataset.value
+})
+
+export default connect(mapStateToProps)(Experiment);

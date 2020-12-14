@@ -5,6 +5,7 @@ import { Button, Slider } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { map } from 'lodash';
 
 const marks = [
     {
@@ -33,12 +34,43 @@ const marks = [
     }
 ];
   
-const Training = () => {
-    const [gpus, setGPUs] = useState([1, 5]);
+const Training = ({datasetNames}) => {
+    const [experimentName, setExperimentName] = useState('');
+    const [inputModel, setInputModel] = useState('');
+    const [selectedDataset, setSelectedDataset] = useState();
+    const [showAdvanceOption, setShowAdvanceOption] = useState(false);
+    const [ batchSize, setBatchSize ] = useState('8');
+    const [ epochs, setEpochs ] = useState('8');
+    const [ learningRate, setLearningRate ] = useState('20');
+    const [ maxSeqLength, setMaxSeqLength ] = useState('20');
+    const [ gpus, setGPUs ] = useState('1');
 
-    const handleChange = (event, newValue) => {
+
+    const handleChangeGPUs = (event, newValue) => {
         setGPUs(newValue);
     };
+
+    const startTraning = () => {
+        const data = {
+            name: experimentName,
+            input_model: inputModel,
+            dataset: selectedDataset,
+            batch_size: batchSize,
+            epochs: epochs,
+            learning_rate: learningRate,
+            max_seq_length: maxSeqLength,
+            no_gpus: gpus
+        };
+
+        fetch('http://localhost:3001/api/experiment', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors'
+        });
+    }
 
     return (
         <div>
@@ -54,7 +86,8 @@ const Training = () => {
                     required
                     id="experiment-name"
                     label="Experiment Name"
-                    defaultValue="Experiment 1"
+                    value={experimentName}
+                    onChange={e => setExperimentName(e.target.value)}
                     style={{marginBottom: 16}}
                 />
 
@@ -62,7 +95,8 @@ const Training = () => {
                     id="input-model"
                     select
                     label="Input Model"
-                    value='FinBERT'
+                    value={inputModel}
+                    onChange={e => setInputModel(e.target.value)}
                     style={{marginBottom: 16}}
                 >
                     <MenuItem key='FinBERT' value='FinBERT'>
@@ -74,65 +108,84 @@ const Training = () => {
                     id="dataset"
                     select
                     label="Dataset"
-                    value='Dataset name 1'
+                    value={selectedDataset}
+                    onChange={e => setSelectedDataset(e.target.value)}
                     style={{marginBottom: 16}}
                 >
-                    <MenuItem key='dataset-name-1' value='Dataset name 1'>
-                        Dataset name 1 
-                    </MenuItem>
+                    {
+                        map(datasetNames, name => (
+                            <MenuItem key={name} value={name}>
+                                {name}
+                            </MenuItem>
+                        ))
+                    }
                 </TextField>
 
-                <TextField
-                    required
-                    id="batch-size"
-                    label="Batch size"
-                    defaultValue="8"
-                    style={{marginBottom: 16}}
-                />
 
-                <TextField
-                    required
-                    id="epochs"
-                    label="Epochs"
-                    defaultValue="20"
-                    style={{marginBottom: 16}}
-                />
+                {
+                    showAdvanceOption &&
+                    <>
+                        <TextField
+                            required
+                            id="batch-size"
+                            label="Batch size"
+                            style={{marginBottom: 16}}
+                            type='number'
+                            value={batchSize}
+                            onChange={e => setBatchSize(e.target.value)}
+                        />
 
-                <TextField
-                    required
-                    id="learning-rate"
-                    label="Learning rate"
-                    defaultValue="20"
-                    style={{marginBottom: 16}}
-                />
+                        <TextField
+                            required
+                            id="epochs"
+                            label="Epochs"
+                            style={{marginBottom: 16}}
+                            type='number'
+                            value={epochs}
+                            onChange={e => setEpochs(e.target.value)}
+                        />
 
-                <TextField
-                    required
-                    id="max-seq-length"
-                    label="Max seq length"
-                    defaultValue="20"
-                    style={{marginBottom: 16}}
-                />
+                        <TextField
+                            required
+                            id="learning-rate"
+                            label="Learning rate"
+                            style={{marginBottom: 16}}
+                            type='number'
+                            value={learningRate}
+                            onChange={e => setLearningRate(e.target.value)}
+                        />
 
-                <Typography id="discrete-slider-always" gutterBottom>
-                    GPUs
-                </Typography>
-                <Slider
-                    defaultValue={1}
-                    // getAriaValueText={valuetext}
-                    aria-labelledby="discrete-slider-always"
-                    step={1}
-                    marks={marks}
-                    // valueLabelDisplay="on"
-                    max={6}
-                    min={1}
-                />
+                        <TextField
+                            required
+                            id="max-seq-length"
+                            label="Max seq length"
+                            style={{marginBottom: 16}}
+                            type='number'
+                            value={maxSeqLength}
+                            onChange={e => setMaxSeqLength(e.target.value)}
+                        />
+
+                        <Typography id="discrete-slider-always" gutterBottom>
+                            GPUs
+                        </Typography>
+                        <Slider
+                            aria-labelledby="discrete-slider-always"
+                            step={1}
+                            marks={marks}
+                            max={6}
+                            min={1}
+                            value={gpus}
+                            onChange={handleChangeGPUs}
+                        />
+                    </>
+                }
 
                 <FormControlLabel
                     control={
                         <Switch
-                            checked={true}
+                            checked={showAdvanceOption}
                             color="primary"
+                            onClick={e => setShowAdvanceOption(e.target.checked)}
                         />
                     }
                     label="Advanced"
@@ -143,6 +196,7 @@ const Training = () => {
                     variant='outlined'
                     color='primary'
                     style={{marginTop: 16}}
+                    onClick={startTraning}
                 >
                     Train
                 </Button>

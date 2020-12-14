@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+import { isEmpty } from 'lodash';
 
 import utilStyles from '../styles/utils.module.scss';
 import Layout from '../components/layout';
+import { setDataset } from '../stores/datasetSlice';
 
 const Home= ({user}) => {
 
+  const router = useRouter();
+
+  const dispatch = useDispatch();
+
   const [ selectedType, setSelectedType ] = useState();
-  console.log(user);
+
+  useEffect(() => {
+    if(isEmpty(user)){
+      router.push('/');
+      return;
+    }
+
+    getDatasetItems();
+  }, []);
+
+  const getDatasetItems = () => {
+    fetch('http://localhost:3001/api/file/'+user.id)
+    .then(res => res.json())
+    .then(data => dispatch(setDataset(data.data)));
+  };
+
   return (
     <Layout>
       <Paper style={{width: '60%', margin: 'auto', padding: 20}}>
@@ -74,7 +96,7 @@ const Home= ({user}) => {
 }
 
 function mapStateToProps(state){
-  return { user: state.user.value._profile }
+  return { user: state.user.value.profile }
 }
 
 export default connect(mapStateToProps)(Home)

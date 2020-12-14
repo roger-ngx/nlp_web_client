@@ -17,8 +17,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { throttle } from 'lodash';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-const client = new W3CWebSocket('ws://127.0.0.1:8080');
 import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
+
 
 import Layout from '../../components/layout';
 import LinearProgressWithLabel from '../../components/LinearProgessWithLabel';
@@ -41,45 +42,51 @@ const StyledTableCell = withStyles((theme) => ({
     },
   }))(TableRow);
 
-  function createData(metric, result) {
-    return { metric, result };
-  }
-
-  const rows = [
-    createData('F1-scrore', 0.90),
-    createData('Precision', 0.90),
-    createData('Recall', 0.90),
-    createData('Accuracy', 0.90),
-  ];
-
   const useStyles = makeStyles({
     table: {
       minWidth: 700,
     },
   });
 
-const Dataset = ({user}) => {
+const Dataset = ({user, dataSet}) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    let socketClient = null;
 
     const [uploadingFile, setUploadingFile] = useState();
     const [ datasetType, setDatasetType ] = useState('train');
     const [ datasetName, setDatasetName ] = useState('');
     const [ uploading, setUploading ] = useState(false);
     const [ fileUploadedPercent, setFileUploadedPercent ] = useState(0);
-    const [ dataset, setDataSet ] = useState([]);
+    const [ dataset, setDataSet ] = useState(dataSet);
+
 
     useEffect(() => {
-        client.onopen = () => {
+        connectToSocket();
+
+        return () => {
+            console.log('socket is closed');
+            socketClient && socketClient.close();
+        };
+    }, []);
+
+    const connectToSocket = () => {
+        socketClient = new W3CWebSocket('ws://127.0.0.1:3001');
+
+        socketClient.onopen = () => {
             console.log('WebSocket Client Connected');
         };
-        client.onmessage = (message) => {
+        socketClient.onmessage = (message) => {
             console.log(message);
             if(message.data){
                 setFileUploadedPercent(+message.data);
             }
         };
-        getDatasetItems();
-    }, []);
+        // socketClient.onclose = () => {
+        //     console.log('socket is close, reconnecting');
+        //     setTimeout(connectToSocket, 5000);
+        // }
+    }
 
     const convertFileSizeFromBytes = (bytes) => {
         let count = 0;
@@ -149,12 +156,6 @@ const Dataset = ({user}) => {
             setUploading(false);
         });
     };
-
-    const getDatasetItems = () => {
-        fetch('http://localhost:3001/api/file/'+user.id)
-        .then(res => res.json())
-        .then(data => setDataSet(data.data));
-    }
 
     return(
         <Layout>
@@ -285,7 +286,8 @@ const Dataset = ({user}) => {
 }
 
 const mapStateRoProps = (state) => ({
-    user: state.user.value._profile
+    user: state.user.value._profile,
+    dataSet: state.dataset.value
 })
 
 export default connect(mapStateRoProps)(Dataset);
