@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash';
 
 import utilStyles from '../styles/utils.module.scss';
 import Layout from '../components/layout';
-import { setDataset } from '../stores/datasetSlice';
+import { fetchDatasetItems } from '../stores/datasetSlice';
 
 const Home= ({user}) => {
 
@@ -22,14 +22,8 @@ const Home= ({user}) => {
       return;
     }
 
-    getDatasetItems();
+    fetchDatasetItems(user.id);
   }, []);
-
-  const getDatasetItems = () => {
-    fetch('http://localhost:3001/api/file/'+user.id)
-    .then(res => res.json())
-    .then(data => dispatch(setDataset(data.data)));
-  };
 
   return (
     <Layout>

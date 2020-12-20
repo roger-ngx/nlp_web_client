@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Button, Slider } from '@material-ui/core';
@@ -6,6 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { map } from 'lodash';
+
+import socketClient from '../../lib/ws';
 
 const marks = [
     {
@@ -49,6 +51,10 @@ const Training = ({datasetNames}) => {
     const handleChangeGPUs = (event, newValue) => {
         setGPUs(newValue);
     };
+
+    useEffect(() => {
+        socketClient.on('thanhnguyen-realtime-test', data => console.log(data));
+    }, []);
 
     const startTraning = () => {
         const data = {

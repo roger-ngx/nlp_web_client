@@ -15,11 +15,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { throttle } from 'lodash';
-import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { throttle, map } from 'lodash';
 import { connect } from 'react-redux';
 import { useDispatch } from 'react-redux';
-
+import socketClient from '../../lib/ws';
 
 import Layout from '../../components/layout';
 import LinearProgressWithLabel from '../../components/LinearProgessWithLabel';
@@ -51,7 +50,6 @@ const StyledTableCell = withStyles((theme) => ({
 const Dataset = ({user, dataSet}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    let socketClient = null;
 
     const [uploadingFile, setUploadingFile] = useState();
     const [ datasetType, setDatasetType ] = useState('train');
@@ -63,30 +61,16 @@ const Dataset = ({user, dataSet}) => {
 
     useEffect(() => {
         connectToSocket();
-
-        return () => {
-            console.log('socket is closed');
-            socketClient && socketClient.close();
-        };
     }, []);
 
     const connectToSocket = () => {
-        socketClient = new W3CWebSocket('ws://127.0.0.1:3001');
-
-        socketClient.onopen = () => {
-            console.log('WebSocket Client Connected');
-        };
-        socketClient.onmessage = (message) => {
+        socketClient.on('thanhnguyen', (message) => {
             console.log(message);
-            if(message.data){
-                setFileUploadedPercent(+message.data);
+            if(message){
+                setFileUploadedPercent(+message);
             }
-        };
-        // socketClient.onclose = () => {
-        //     console.log('socket is close, reconnecting');
-        //     setTimeout(connectToSocket, 5000);
-        // }
-    }
+        });
+    };
 
     const convertFileSizeFromBytes = (bytes) => {
         let count = 0;
@@ -264,7 +248,7 @@ const Dataset = ({user, dataSet}) => {
                             </TableHead>
                             <TableBody>
                             {
-                                dataset.map((row) => 
+                                map(dataset, (row) => 
                                 (<StyledTableRow key={row._id}>
                                     <StyledTableCell component="th" scope="row">
                                         {row.name}
