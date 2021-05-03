@@ -101,6 +101,12 @@ const Dataset = ({user, dataSet}) => {
         return bytes.toFixed(2) + unit
     }
 
+    const fileSelectedHandle = e => {
+        const file = e.target.files[0];
+
+        setUploadingFile(file);
+    }
+
     const fileDropHandler = e => {
         console.log('file dropped');
         e.preventDefault();
@@ -176,47 +182,58 @@ const Dataset = ({user, dataSet}) => {
                         </RadioGroup>
                     </FormControl>
 
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            backgroundColor:'transparent',
-                            border: '1px dashed rgb(97, 117, 156)',
-                            marginBottom: 32
-                        }}
-                        onDrop={fileDropHandler}
-                        onDragOver={fileDragOverHandler}
-                    >
-                        {
-                            !!uploadingFile ?
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    width: '100%',
-                                    minHeight: 200,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}
-                            >
-                                <Typography>{uploadingFile.name}</Typography>
-                                <Typography>{convertFileSizeFromBytes(uploadingFile.size)}</Typography>
-                                {
-                                    uploading && fileUploadedPercent &&
-                                    <div style={{width: '90%'}}>
-                                        <LinearProgressWithLabel value={fileUploadedPercent} />
-                                    </div>
-                                }
-                            </div>
-                            :
-                            <>
-                                <CloudUpload style={{color: 'blue', fontSize: 48}}/>
-                                <Typography>Drag or click to browse for file to add.</Typography>
-                                <Typography>(Supported file types : TXT, TSV, JSON, XLSX)</Typography>
-                            </>
-                        }
-                    </div>
+                    <input
+                        id='upload_file'
+                        type='file'
+                        multiple
+                        style={{display: 'none'}}
+                        onChange={fileSelectedHandle}
+                    />
+                    <label htmlFor='upload_file'>
+                        <div
+                            component='span'
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                backgroundColor:'transparent',
+                                border: '1px dashed rgb(97, 117, 156)',
+                                marginBottom: 32,
+                                cursor: 'pointer'
+                            }}
+                            onDrop={fileDropHandler}
+                            onDragOver={fileDragOverHandler}
+                        >
+                            {
+                                !!uploadingFile ?
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        width: '100%',
+                                        minHeight: 200,
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <Typography>{uploadingFile.name}</Typography>
+                                    <Typography>{convertFileSizeFromBytes(uploadingFile.size)}</Typography>
+                                    {
+                                        uploading && fileUploadedPercent &&
+                                        <div style={{width: '90%'}}>
+                                            <LinearProgressWithLabel value={fileUploadedPercent} />
+                                        </div>
+                                    }
+                                </div>
+                                :
+                                <>
+                                    <CloudUpload style={{color: 'blue', fontSize: 48}}/>
+                                    <Typography>Drag or click to browse for file to add.</Typography>
+                                    <Typography>(Supported file types : TXT, TSV, JSON, XLSX)</Typography>
+                                </>
+                            }
+                        </div>
+                    </label>
 
                     <Button
                         variant='outlined'
