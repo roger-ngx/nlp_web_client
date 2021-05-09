@@ -54,7 +54,7 @@ const Dashboard = () => {
         data.append('file', file);
         data.append('user', 'roger');
 
-        fetch('http://localhost:3001/api/file/upload', {
+        fetch('http://183.96.253.147:8051/api/file/upload', {
             method: 'POST',
             body: data,
             mode: 'cors'

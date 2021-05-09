@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux'
-import withRedux from "next-redux-wrapper";
+import { connect } from 'react-redux';
 
 import utilStyles from '../styles/utils.module.scss';
 import Layout from '../components/layout';
@@ -10,7 +10,7 @@ import SocialLoginButton from '../components/SocialLoginButton';
 import { setUser } from '../stores/userSlice';
 
 
-const Login = () => {
+const Login = ({user}) => {
 
   const dispatch = useDispatch();
 
@@ -18,9 +18,29 @@ const Login = () => {
   console.log('GOOGLE_CLIENT_ID', GOOGLE_CLIENT_ID);
   const router = useRouter();
 
+  // useEffect(() => {
+  //   if(user){
+  //     router.push('/home');
+  //   }
+  // }, [user]);
+
   const handleSocialLogin = user =>  {
     dispatch(setUser(user));
     router.push('/home');
+  };
+
+  const requestToVerifyGoogleAccount = () => {
+    const data = {
+      token: user._token.idToken
+    };
+
+    fetch(`${process.env.SERVER_API}/api/google_login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
   };
 
   const handleSocialLoginFailure = e =>  console.log(e)
@@ -59,8 +79,8 @@ const Login = () => {
   )
 }
 
-export default Login;
+const mapStateRoProps = (state) => ({
+  user: state.user.value._profile,
+})
 
-// const makeStore = () => store;
-
-// export default withRedux(makeStore)(Login);
+export default connect(mapStateRoProps)(Login);

@@ -23,68 +23,77 @@ const Home= ({user}) => {
     }
 
     fetchDatasetItems(user.id);
-  }, []);
+  }, [user]);
 
   return (
     <Layout>
-      <Paper style={{width: '60%', margin: 'auto', padding: 20}}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <img style={{margin: 'auto'}} src='/icons/project_type.png' />
-            <p style={{textAlign: 'center'}}>Select Project Type</p>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
+      <div
+        style={{
+          width: '100%', height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Paper style={{width: '60%', padding: 20}}>
             <div
-              className={utilStyles.index__projecttype}
-              onClick={() => setSelectedType('ner')}
-              style={{borderColor: selectedType === 'ner' ? '#4285f4' : '#eee'}}         
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+              }}
             >
-              <img style={{margin: '0 20px'}}  src='/icons/ner.png' />
-              <p style={{fontSize: 16}}>Pretraining</p>            
+              <img style={{margin: 'auto'}} src='/icons/project_type.png' />
+              <p style={{textAlign: 'center'}}>Select Project Type</p>
             </div>
             <div
-              className={utilStyles.index__projecttype}
-              onClick={() => setSelectedType('tc')}
-              style={{borderColor: selectedType === 'tc' ? '#4285f4' : '#eee'}}   
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
             >
-              <img style={{margin: '0 20px'}} src='/icons/text_classification.png' />
-              <p style={{fontSize: 16}}>Classification</p>            
+              <div
+                className={utilStyles.index__projecttype}
+                onClick={() => setSelectedType('ner')}
+                style={{borderColor: selectedType === 'ner' ? '#4285f4' : '#eee'}}         
+              >
+                <img style={{margin: '0 20px'}}  src='/icons/ner.png' />
+                <p style={{fontSize: 16}}>Pretraining</p>            
+              </div>
+              <div
+                className={utilStyles.index__projecttype}
+                onClick={() => setSelectedType('tc')}
+                style={{borderColor: selectedType === 'tc' ? '#4285f4' : '#eee'}}   
+              >
+                <img style={{margin: '0 20px'}} src='/icons/text_classification.png' />
+                <p style={{fontSize: 16}}>Classification</p>            
+              </div>
             </div>
-          </div>
 
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-            }}
-          >
             <div
-              className={utilStyles.index__projecttype}
-              onClick={() => setSelectedType('sa')}
-              style={{borderColor: selectedType === 'sa' ? '#4285f4' : '#eee'}}   
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
             >
-              <img style={{margin: '0 20px'}}  src='/icons/sentiment_analysis.png' />
-              <p style={{fontSize: 16}}>Named-entity Recognition</p>            
+              <div
+                className={utilStyles.index__projecttype}
+                onClick={() => setSelectedType('sa')}
+                style={{borderColor: selectedType === 'sa' ? '#4285f4' : '#eee'}}   
+              >
+                <img style={{margin: '0 20px'}}  src='/icons/sentiment_analysis.png' />
+                <p style={{fontSize: 16}}>Named-entity Recognition</p>            
+              </div>
+              <div
+                className={utilStyles.index__projecttype}
+                onClick={() => setSelectedType('rc')}
+                style={{borderColor: selectedType === 'rc' ? '#4285f4' : '#eee'}}
+              >
+                <img style={{margin: '0 20px'}}  src='/icons/review_conversion.png' />
+                <p style={{fontSize: 16}}>Machine Reading Comprehension</p>            
+              </div>
             </div>
-            <div
-              className={utilStyles.index__projecttype}
-              onClick={() => setSelectedType('rc')}
-              style={{borderColor: selectedType === 'rc' ? '#4285f4' : '#eee'}}
-            >
-              <img style={{margin: '0 20px'}}  src='/icons/review_conversion.png' />
-              <p style={{fontSize: 16}}>Machine Reading Comprehension</p>            
-            </div>
-          </div>
-      </Paper>
+        </Paper>
+      </div>
     </Layout>
   )
 }

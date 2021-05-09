@@ -68,7 +68,7 @@ const Training = ({datasetNames}) => {
             no_gpus: gpus
         };
 
-        fetch('http://localhost:3001/api/experiment', {
+        fetch(`${process.env.SERVER_API}/api/experiment`, {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -76,7 +76,7 @@ const Training = ({datasetNames}) => {
             },
             mode: 'cors'
         });
-    }
+    };
 
     return (
         <div>
