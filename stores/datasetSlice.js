@@ -22,9 +22,15 @@ export default datasetSlice.reducer;
 //redux-thunk
 export const fetchDatasetItems = (userId) => {
     return async (dispatch) => {
-        const res = await fetch('http://183.96.253.147:8051/api/file/'+userId);
-        const data = await res.json();
+        try{
+            const res = await fetch('http://localhost:8051/api/file/'+userId);
+            const data = await res.json();
 
-        dispatch(setDataset(data.data));
+            console.log(data);
+
+            dispatch(setDataset(data.data || []));
+        }catch(ex){
+            console.log(ex);
+        }
     };
 };

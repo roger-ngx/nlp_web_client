@@ -15,7 +15,7 @@ const reducers = combineReducers({
     dataset: datasetReducer
 });
 
-
+//store state when page is reloaded
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store =  configureStore({

@@ -5,6 +5,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { makeStyles } from '@material-ui/core/styles';
 import { Twitter, NearMe, Settings, Restore, Assessment, Assignment } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { isEmpty } from 'lodash';
 
 import styles from './layout.module.css';
 
@@ -40,8 +43,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Layout({ children, home }) {
+export default function Layout({ children }) {
   const classes = useStyles();
+  const router = useRouter();
+
+  const user = useSelector(state => state.user.value.profile);
+  if(isEmpty(user)){
+    router.push('/');
+    return;
+  }
 
   return (
     <div className={styles.container}>
@@ -54,7 +64,11 @@ export default function Layout({ children, home }) {
         anchor="left"
       >
         <div className={classes.toolbar}>
-          <Twitter style={{color: '#4285f4'}}/>
+          <Link href='/home'>
+            <div style={{margin: 'auto', width: 32, height: 32, borderRadius: 16, overflow: 'hidden'}}>
+              <img src={user.profilePicURL} />
+            </div>
+          </Link>
         </div>
         <List>
           <Link href='/dashboard'>

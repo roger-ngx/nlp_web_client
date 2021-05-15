@@ -56,7 +56,7 @@ const Dataset = ({user, dataSet}) => {
     const [ datasetName, setDatasetName ] = useState('');
     const [ uploading, setUploading ] = useState(false);
     const [ fileUploadedPercent, setFileUploadedPercent ] = useState(0);
-    const [ dataset, setDataSet ] = useState(dataSet);
+    const [ dataset, setDataSet ] = useState(dataSet || []);
 
 
     useEffect(() => {
@@ -123,6 +123,7 @@ const Dataset = ({user, dataSet}) => {
     };
 
     const fileUploadHandler = () => {
+        console.log(process.env.NEXT_PUBLIC_SERVER_API_DEV);
         setUploading(true);
 
         const data = new FormData();
@@ -131,7 +132,7 @@ const Dataset = ({user, dataSet}) => {
         data.append('datasetName', datasetName);
         data.append('datasetType', datasetType);
 
-        fetch(`${process.env.SERVER_API}/api/file/upload`, {
+        fetch(`http://localhost:8051/api/file/upload`, {
             method: 'POST',
             body: data,
             mode: 'cors'
@@ -286,9 +287,9 @@ const Dataset = ({user, dataSet}) => {
     )
 }
 
-const mapStateRoProps = (state) => ({
+const mapStateToProps = (state) => ({
     user: state.user.value._profile,
     dataSet: state.dataset.value
 })
 
-export default connect(mapStateRoProps)(Dataset);
+export default connect(mapStateToProps)(Dataset);
