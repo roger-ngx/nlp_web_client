@@ -22,6 +22,7 @@ import socketClient from '../../lib/ws';
 
 import Layout from '../../components/layout';
 import LinearProgressWithLabel from '../../components/LinearProgessWithLabel';
+import { fetchDatasetItems } from '../../stores/datasetSlice';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -47,7 +48,7 @@ const StyledTableCell = withStyles((theme) => ({
     },
   });
 
-const Dataset = ({user, dataSet}) => {
+const Dataset = ({user, dataSet, currentProject}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -61,6 +62,7 @@ const Dataset = ({user, dataSet}) => {
 
     useEffect(() => {
         connectToSocket();
+        dispatch(fetchDatasetItems(user.id, currentProject._id));
     }, []);
 
     const connectToSocket = () => {
@@ -129,6 +131,7 @@ const Dataset = ({user, dataSet}) => {
         const data = new FormData();
         data.append('file', uploadingFile);
         data.append('user', JSON.stringify(user));
+        data.append('projectId', currentProject._id);        
         data.append('datasetName', datasetName);
         data.append('datasetType', datasetType);
 
@@ -189,6 +192,7 @@ const Dataset = ({user, dataSet}) => {
                         multiple
                         style={{display: 'none'}}
                         onChange={fileSelectedHandle}
+                        onClick={e => e.target.value = null}
                     />
                     <label htmlFor='upload_file'>
                         <div
@@ -289,6 +293,7 @@ const Dataset = ({user, dataSet}) => {
 
 const mapStateToProps = (state) => ({
     user: state.user.value._profile,
+    currentProject: state.user.currentProject,
     dataSet: state.dataset.value
 })
 
