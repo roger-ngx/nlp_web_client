@@ -83,7 +83,6 @@ const Dashboard = () => {
                     alignItems: 'center'
                 }}
             >
-                <div>Default Project</div>
                 <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <div style={{marginRight: 24}}>Last train success</div>
                     <Button variant='contained' color='primary' style={{marginRight: 24}}>Train Modal</Button>

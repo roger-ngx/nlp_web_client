@@ -13,7 +13,7 @@ const Project= ({projectType, setProjectType}) => {
         style={{
           width: '100%', height: '100%',
           display: 'flex',
-          justifyContent: 'center',
+          // justifyContent: 'center',
           alignItems: 'center'
         }}
       >

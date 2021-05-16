@@ -2,10 +2,12 @@ import React, { forwardRef, useState, useEffect } from 'react';
 import { Paper, Card, CardContent, Grid, CardHeader, Hidden, Slide, Dialog, Button, IconButton, TextField } from '@material-ui/core';
 import { Add, Close } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Project from './project';
 import { useRouter } from 'next/router';
 import { isEmpty, map } from 'lodash';
+
+import { setUserProjects, setCurrentUserProject } from '../stores/userSlice';
 
 const AddProjectDialogTransition = forwardRef((props, ref) => {
     return <Slide direction='left' ref={ref} {...props} />
@@ -18,8 +20,9 @@ const Home = () => {
 
     if(isEmpty(user)){
         router.push('/');
-        return;
     }
+
+    const dispatch = useDispatch();
     
     const [ addProjectDialogOpenning, setProjectDialogOpenning ] = useState(false);
     const [ currentStep, setCurrentStep ] = useState(1);
@@ -60,9 +63,13 @@ const Home = () => {
         
         const project = await res.json();
         setProjects(project.data);
+
+        dispatch(setUserProjects(project.data));
     }
 
-    return <div
+    return !user ? <div>Loading...</div>
+    :
+    <div
         style={{width: '100%', height: '100%', margin: 'auto'}}
     >
         <div
@@ -96,7 +103,13 @@ const Home = () => {
                 {
                     map(projects, project => (
                         <Grid item xs={12} sm={4} key={project._id}>
-                            <Card className={classes.card} onClick={() => router.push(`/dashboard`)}>
+                            <Card
+                                className={classes.card}
+                                onClick={() => {
+                                    dispatch(setCurrentUserProject(project));
+                                    router.push(`/dashboard`)
+                                }}
+                            >
                                 <CardHeader
                                     title={project.name}
                                     subheader={project.type}
