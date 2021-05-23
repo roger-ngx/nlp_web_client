@@ -74,89 +74,91 @@ const Dashboard = () => {
 
     return(
         <Layout>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    padding: '24px 5%',
-                    alignItems: 'center'
-                }}
-            >
-                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                    <div style={{marginRight: 24}}>Last train success</div>
-                    <Button variant='contained' color='primary' style={{marginRight: 24}}>Train Modal</Button>
-                    <Button variant='contained' color='primary'>Enable Group</Button>
-                </div>
-            </div>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    padding: '24px 5%',
-                    alignItems: 'center'
-                }}
-            >
-                <SubdirectoryArrowRight />
-                <InputBase
-                    style={{flex: 1}}
-                    placeholder='Add a pharase and hit Enter'
-                />
-                <Button variant='contained' color='primary' style={{width: 28, height: 28, minWidth: 28, borderRadius: 14, padding: 0}}>
-                    <NavigateNext />
-                </Button>
-                <Divider style={{margin: '0 12px'}} orientation='vertical' flexItem />
-                <Button
-                    variant='text'
-                    startIcon={<FolderOpen />}
-                    onClick={() => setOpenUploadModal(true)}
-                >
-                    Upload phrases
-                </Button>
-            </div>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    padding: '24px 5%',
-                    alignItems: 'center'
-                }}
-            >
-                <TextField
-                    placeholder='Search phrase'
-                    InputProps={{
-                        disableUnderline: true,
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Search />
-                            </InputAdornment>
-                        ),
+            <div style={{padding: 24}}>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: 24
                     }}
-                />
-                <Button
-                    variant='text'
-                    startIcon={<FilterList />}
-                    onClick={testConnection}
                 >
-                    Filter
-                </Button>
-                <Button
-                    variant='text'
-                    startIcon={<Refresh />}
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <div style={{marginRight: 24}}>Last train success</div>
+                        <Button variant='contained' color='primary' style={{marginRight: 24}}>Train Modal</Button>
+                        <Button variant='contained' color='primary'>Enable Group</Button>
+                    </div>
+                </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginBottom: 24
+                    }}
                 >
-                    Refresh
-                </Button>
-                <Button
-                    variant='text'
-                    startIcon={<VerticalAlignBottom />}
-                    style={{marginLeft: 'auto', textTransform: 'none'}}
+                    <SubdirectoryArrowRight />
+                    <InputBase
+                        style={{flex: 1}}
+                        placeholder='Add a pharase and hit Enter'
+                    />
+                    <Button variant='contained' color='primary' style={{width: 28, height: 28, minWidth: 28, borderRadius: 14, padding: 0}}>
+                        <NavigateNext />
+                    </Button>
+                    <Divider style={{margin: '0 12px'}} orientation='vertical' flexItem />
+                    <Button
+                        variant='text'
+                        startIcon={<FolderOpen />}
+                        onClick={() => setOpenUploadModal(true)}
+                    >
+                        Upload phrases
+                    </Button>
+                </div>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginBottom: 24
+                    }}
                 >
-                    Download
-                </Button>
-            </div>
+                    <TextField
+                        placeholder='Search phrase'
+                        InputProps={{
+                            disableUnderline: true,
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <Button
+                        variant='text'
+                        startIcon={<FilterList />}
+                        onClick={testConnection}
+                    >
+                        Filter
+                    </Button>
+                    <Button
+                        variant='text'
+                        startIcon={<Refresh />}
+                    >
+                        Refresh
+                    </Button>
+                    <Button
+                        variant='text'
+                        startIcon={<VerticalAlignBottom />}
+                        style={{marginLeft: 'auto', textTransform: 'none'}}
+                    >
+                        Download
+                    </Button>
+                </div>
 
-            <div style={{ height: 400, width: '100%', padding: '24px 5%'}}>
-                <DataGrid rows={[]} columns={columns} pageSize={5} />
+                <div style={{ height: 400, width: '100%'}}>
+                    <DataGrid rows={[]} columns={columns} pageSize={5} />
+                </div>
             </div>
 
             <Dialog onClose={() => setOpenUploadModal(false)} open={openUploadModal}>

@@ -120,7 +120,7 @@ export default function Layout({ children }) {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            margin: '16px 5%',
+            margin: 24,
             alignItems: 'center'
           }}
         >
