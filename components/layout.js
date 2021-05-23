@@ -50,7 +50,7 @@ export default function Layout({ children }) {
   const classes = useStyles();
   const router = useRouter();
 
-  const user = useSelector(state => state.user.value.profile);
+  const user = useSelector(state => state.user.value._profile);
   if(isEmpty(user)){
     router.push('/');
   }
