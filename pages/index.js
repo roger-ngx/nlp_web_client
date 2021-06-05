@@ -80,7 +80,7 @@ const Login = ({user, token}) => {
       >
           <SocialLoginButton
             provider='google'
-            appId='75262550263-6ne1rfsalhpnrqsps6938ubguimjbl73.apps.googleusercontent.com'
+            appId='923672546587-olmscr5jlopvabts1mlme9duqj6or86h.apps.googleusercontent.com'
             onLoginSuccess={handleSocialLogin}
             onLoginFailure={handleSocialLoginFailure}
             disabled={loading}

@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, IconButton, Fab, Divider, DialogTitle, DialogContent, DialogActions, DialogContentText, Dialog } from '@material-ui/core';
+import { Button, TextField, IconButton, Fab, Divider, DialogTitle, DialogContent, DialogActions, DialogContentText, Dialog, Table, TableHead, TableRow, TableCell, TableBody, Switch } from '@material-ui/core';
 import { FolderOpen, SubdirectoryArrowRight, NavigateNext, Search, VerticalAlignBottom, FilterList, Refresh, CloudUpload } from '@material-ui/icons';
 import { DataGrid } from '@material-ui/data-grid';
 import InputBase from '@material-ui/core/InputBase';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { map } from 'lodash';
+import moment from 'moment';
+
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 const client = new W3CWebSocket('ws://127.0.0.1:8080');
@@ -11,37 +15,95 @@ const client = new W3CWebSocket('ws://127.0.0.1:8080');
 import Layout from '../../components/layout';
 
 const columns = [
-    { field: 'No', headerName: 'No', sortable: false },
-    { field: 'Status', headerName: 'Status', sortable: false },
-    { field: 'Inference', headerName: 'Inference', sortable: false },
+    { field: 'id', headerName: 'No', sortable: false },
+    { field: 'status', headerName: 'Status', sortable: false },
+    { field: 'inference', headerName: 'Inference', sortable: false },
     {
-      field: 'Confirmed',
+      field: 'confirmed',
       headerName: 'Confirmed',
       type: 'number',
       sortable: false,
     },
     {
-      field: 'Phrase',
+      field: 'phrase',
       headerName: 'Phrase',
       sortable: false,
+      width: 500,
     },
-    { field: 'Created', headerName: 'Created' },
-    { field: 'Training', headerName: 'Training', sortable: false },
-    { field: 'Test', headerName: 'Test', sortable: false },
-    { field: 'Delete', headerName: 'Delete', sortable: false },
-  ];
+    { field: 'created', headerName: 'Created', width: 150 },
+    { field: 'training', headerName: 'Training', sortable: false },
+    { field: 'test', headerName: 'Test', sortable: false },
+    { field: 'delete', headerName: 'Delete', sortable: false },
+];
+
+const Phrase = ({data, onDataChanged}) => {
+
+    const [ phraseData, setPhraseData ] = useState(data);
+
+    useEffect(() => {
+        onDataChanged(phraseData);
+    }, [phraseData]);
+
+    return (
+        <TableRow>
+            <TableCell>{phraseData.id}</TableCell>
+            <TableCell>
+                <div style={{backgroundColor: '#e0e0e0', padding: '8px 16px', borderRadius: 20}}>
+                    {phraseData.status}
+                </div>
+            </TableCell>
+            <TableCell>
+                {phraseData.inference}
+            </TableCell>
+            <TableCell>{phraseData.confirmed}</TableCell>
+            <TableCell>{phraseData.phrase}</TableCell>
+            <TableCell>{moment(phraseData.created).format('YYYY.MM.DD').toString()}</TableCell>
+            <TableCell>
+                <Switch
+                    checked={phraseData.training}
+                    onChange={e => {
+                        phraseData.training = e.target.checked;
+                        setPhraseData({...phraseData});
+                    }}
+                    color="primary"
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+            </TableCell>
+            <TableCell>
+                <Switch
+                    checked={phraseData.test}
+                    onChange={e => {
+                        phraseData.test = e.target.checked;
+                        setPhraseData({...phraseData});
+                    }}
+                    color="primary"
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+            </TableCell>                                      
+            <TableCell>
+                <IconButton>
+                    <DeleteIcon />
+                </IconButton>
+            </TableCell>                                      
+        </TableRow>
+    )
+}
 
 const Dashboard = () => {
 
     const [ openUploadModal, setOpenUploadModal ] = useState(false);
 
+    const [ phrase, setPhrase ] = useState('');
+
+    const [ phraseData, setPhraseData ] = useState([]);
+
     useEffect(() => {
         client.onopen = () => {
             console.log('WebSocket Client Connected');
-          };
-          client.onmessage = (message) => {
+        };
+        client.onmessage = (message) => {
             console.log(message);
-          };
+        };
     }, []);
 
     const fileDropHandler = e => {
@@ -70,6 +132,12 @@ const Dashboard = () => {
         fetch('/api/users', {
             method: 'GET'
         }).then(res => console.log(res));
+    };
+    
+    const onAddNewPhrase = () => {
+        const data = { id: 'id', status: 'Inferring', inference: '', confirmed: '', phrase: phrase, created: new Date(), training: false, test: false, delete: false };
+        setPhraseData([...phraseData, data]);
+        setPhrase();
     }
 
     return(
@@ -102,8 +170,16 @@ const Dashboard = () => {
                     <InputBase
                         style={{flex: 1}}
                         placeholder='Add a pharase and hit Enter'
+                        value={phrase}
+                        onChange={e => setPhrase(e.target.value)}
+                        onKeyPress={e => e.key==='Enter'&&onAddNewPhrase()}
                     />
-                    <Button variant='contained' color='primary' style={{width: 28, height: 28, minWidth: 28, borderRadius: 14, padding: 0}}>
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        style={{width: 28, height: 28, minWidth: 28, borderRadius: 14, padding: 0}}
+                        onClick={onAddNewPhrase}
+                    >
                         <NavigateNext />
                     </Button>
                     <Divider style={{margin: '0 12px'}} orientation='vertical' flexItem />
@@ -157,46 +233,64 @@ const Dashboard = () => {
                 </div>
 
                 <div style={{ height: 400, width: '100%'}}>
-                    <DataGrid rows={[]} columns={columns} pageSize={5} />
+                    {/* <DataGrid rows={phraseData} columns={columns} pageSize={5} /> */}
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                {
+                                    map(columns, column => (
+                                        <TableCell>{column.headerName}</TableCell>
+                                    ))
+                                }
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                map(phraseData, (data, index) => (
+                                    <Phrase data={data} onDataChanged={data => phraseData[index] = data}/>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
 
             <Dialog onClose={() => setOpenUploadModal(false)} open={openUploadModal}>
-                    <DialogTitle>Upload phrases</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>Each phrase should start on a new line in the document.</DialogContentText>
-                        <DialogContentText>For example :</DialogContentText>
-                        <DialogContentText>How many dependents can I have on my plan?</DialogContentText>
-                        <DialogContentText>How do I get reimbursed for medical supplies?</DialogContentText>
+                <DialogTitle>Upload phrases</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Each phrase should start on a new line in the document.</DialogContentText>
+                    <DialogContentText>For example :</DialogContentText>
+                    <DialogContentText>How many dependents can I have on my plan?</DialogContentText>
+                    <DialogContentText>How do I get reimbursed for medical supplies?</DialogContentText>
+                    <div
+                        style={{padding: '0.5rem', backgroundColor:'rgb(192, 200, 216)'}}
+                    >
                         <div
-                            style={{padding: '0.5rem', backgroundColor:'rgb(192, 200, 216)'}}
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                backgroundColor:'transparent',
+                                border: '1px dashed rgb(97, 117, 156)'
+                            }}
+                            onDrop={fileDropHandler}
+                            onDragOver={fileDragOverHandler}
                         >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    backgroundColor:'transparent',
-                                    border: '1px dashed rgb(97, 117, 156)'
-                                }}
-                                onDrop={fileDropHandler}
-                                onDragOver={fileDragOverHandler}
-                            >
-                                <CloudUpload style={{color: 'blue', fontSize: 48}}/>
-                                <DialogContentText>Drag or click to browse for file to add.</DialogContentText>
-                                <DialogContentText>(Supported file types : TXT, TSV, JSON, XLSX)</DialogContentText>
-                            </div>
+                            <CloudUpload style={{color: 'blue', fontSize: 48}}/>
+                            <DialogContentText>Drag or click to browse for file to add.</DialogContentText>
+                            <DialogContentText>(Supported file types : TXT, TSV, JSON, XLSX)</DialogContentText>
                         </div>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            variant='text'
-                            onClick={() => setOpenUploadModal(false)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button variant='contained' disabled>Upload</Button>
-                    </DialogActions>
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant='text'
+                        onClick={() => setOpenUploadModal(false)}
+                    >
+                        Cancel
+                    </Button>
+                    <Button variant='contained' disabled>Upload</Button>
+                </DialogActions>
             </Dialog>
         </Layout>
     )
