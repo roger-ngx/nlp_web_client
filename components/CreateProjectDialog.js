@@ -3,14 +3,16 @@ import { Slide, Dialog, Button, IconButton, TextField } from '@material-ui/core'
 import { Close } from '@material-ui/icons';
 import Project from './Project';
 
+//https://github.com/mui-org/material-ui/issues/9116
+const AddProjectDialogTransition = forwardRef((props, ref) => {
+    return <Slide direction='left' in={true} ref={ref} {...props} />
+});
+
 const CreateProjectDialog = ({open, onClose}) => {
     const [ currentStep, setCurrentStep ] = useState(1);
     const [ projectName, setProjectName ] = useState();
     const [ projectType, setProjectType ] = useState();
 
-    const AddProjectDialogTransition = forwardRef((props, ref) => {
-        return <Slide direction='left' ref={ref} {...props} />
-    });
 
     const addNewProject = async () => {
         const data = {

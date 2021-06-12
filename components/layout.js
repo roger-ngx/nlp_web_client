@@ -149,13 +149,10 @@ export default function Layout({ children }) {
           {children}
         </div>
 
-        {
-            addProjectDialogOpenning &&
-            <CreateProjectDialog
-                open={addProjectDialogOpenning}
-                onClose={() => setProjectDialogOpenning(false)}
-            />
-        }
+        <CreateProjectDialog
+            open={addProjectDialogOpenning}
+            onClose={() => setProjectDialogOpenning(false)}
+        />
       </main>
     </div>
   )
