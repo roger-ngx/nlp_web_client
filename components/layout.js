@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -11,6 +12,7 @@ import { isEmpty, map } from 'lodash';
 
 import styles from './layout.module.css';
 import { Select, MenuItem, ListSubheader, Divider } from '@material-ui/core';
+import CreateProjectDialog from './CreateProjectDialog';
 
 const drawerWidth = 60;
 
@@ -54,6 +56,8 @@ export default function Layout({ children }) {
   if(isEmpty(user)){
     router.push('/');
   }
+
+  const [ addProjectDialogOpenning, setProjectDialogOpenning ] = useState(false);
 
   const projects = useSelector(state => state.user.projects);
   const currentProject = useSelector(state => state.user.currentProject);
@@ -128,7 +132,7 @@ export default function Layout({ children }) {
             value={currentProject.name}
           >
             <MenuItem>See all projects</MenuItem>
-            <MenuItem>Add a project</MenuItem>
+            <MenuItem onClick={() => setProjectDialogOpenning(true)}>Add a project</MenuItem>
             <Divider />
             <ListSubheader>All projects</ListSubheader>
             {
@@ -144,6 +148,14 @@ export default function Layout({ children }) {
         <div style={{flex: 1}}>
           {children}
         </div>
+
+        {
+            addProjectDialogOpenning &&
+            <CreateProjectDialog
+                open={addProjectDialogOpenning}
+                onClose={() => setProjectDialogOpenning(false)}
+            />
+        }
       </main>
     </div>
   )

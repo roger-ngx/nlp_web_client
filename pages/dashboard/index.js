@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Button, TextField, IconButton, Fab, Divider, DialogTitle, DialogContent, DialogActions, DialogContentText, Dialog, Table, TableHead, TableRow, TableCell, TableBody, Switch } from '@material-ui/core';
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+    Button, TextField, IconButton, Divider,
+    DialogTitle, DialogContent, DialogActions,
+    DialogContentText, Dialog, Table, TableHead,
+    TableRow, TableCell, TableBody,
+    Switch, Popover, Typography, MenuItem, MenuList
+} from '@material-ui/core';
+
 import { FolderOpen, SubdirectoryArrowRight, NavigateNext, Search, VerticalAlignBottom, FilterList, Refresh, CloudUpload } from '@material-ui/icons';
 import { DataGrid } from '@material-ui/data-grid';
 import InputBase from '@material-ui/core/InputBase';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { map } from 'lodash';
 import moment from 'moment';
+import { Autocomplete } from '@material-ui/lab';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -39,6 +47,8 @@ const columns = [
 const Phrase = ({data, onDataChanged}) => {
 
     const [ phraseData, setPhraseData ] = useState(data);
+    const [ anchorEl, setAnchorEl ] = useState(null);
+    const textRef = useRef(null);
 
     useEffect(() => {
         onDataChanged(phraseData);
@@ -55,9 +65,35 @@ const Phrase = ({data, onDataChanged}) => {
             <TableCell>
                 {phraseData.inference}
             </TableCell>
-            <TableCell>{phraseData.confirmed}</TableCell>
-            <TableCell>{phraseData.phrase}</TableCell>
-            <TableCell>{moment(phraseData.created).format('YYYY.MM.DD').toString()}</TableCell>
+            <TableCell>
+                <TextField ref={textRef} label='Select...' variant='outlined' onClick={e => setAnchorEl(e.currentTarget)}/>
+                <Popover
+                    open={Boolean(anchorEl)}
+                    anchorEl={anchorEl}
+                    onClose={() => {
+                        textRef.current.blur();
+                        setAnchorEl(null);
+                    }}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                >
+                    <div>
+                        <MenuList>
+                            <MenuItem>Item 1</MenuItem>
+                            <MenuItem>Item 2</MenuItem>
+                        </MenuList>
+                        <TextField />
+                    </div>
+                </Popover>
+            </TableCell>
+            <TableCell style={{width: '30%'}}>{phraseData.phrase}</TableCell>
+            <TableCell>{moment(phraseData.created).format('YYYY.MM.DD HH:mm:ss').toString()}</TableCell>
             <TableCell>
                 <Switch
                     checked={phraseData.training}
@@ -137,7 +173,7 @@ const Dashboard = () => {
     const onAddNewPhrase = () => {
         const data = { id: 'id', status: 'Inferring', inference: '', confirmed: '', phrase: phrase, created: new Date(), training: false, test: false, delete: false };
         setPhraseData([...phraseData, data]);
-        setPhrase();
+        setPhrase('');
     }
 
     return(
