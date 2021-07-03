@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux'
@@ -8,39 +8,55 @@ import utilStyles from '../styles/utils.module.scss';
 import Layout from '../components/layout';
 import SocialLoginButton from '../components/SocialLoginButton';
 import { setUser } from '../stores/userSlice';
+import { CircularProgress } from '@material-ui/core';
 
 const GOOGLE_CLIENT_ID = '923672546587-olmscr5jlopvabts1mlme9duqj6or86h.apps.googleusercontent.com';
 
-const Login = ({user}) => {
+const Login = ({user, token}) => {
+
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    if(!token){
+      return;
+    }
+    const idToken = token.idToken;
+    if(idToken){
+      requestToVerifyGoogleAccount(idToken);
+    }
+  }, [token]);
+
+  const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+>>>>>>> 417e05a56385d3eab9b979b7826829ae5a17e0bd
   console.log('GOOGLE_CLIENT_ID', GOOGLE_CLIENT_ID);
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if(user){
-  //     router.push('/home');
-  //   }
-  // }, [user]);
 
   const handleSocialLogin = user =>  {
     dispatch(setUser(user));
     router.push('/home');
   };
 
-  const requestToVerifyGoogleAccount = () => {
-    const data = {
-      token: user._token.idToken
-    };
+  const requestToVerifyGoogleAccount = async (token) => {
+    setLoading(true);
 
-    fetch(`${process.env.SERVER_API}/api/google_login`, {
+    const res = await fetch(`http://localhost:8051/api/google_login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({token})
     });
+
+    const userId = await res.json();
+    if(user.id===userId){
+      router.push('/home');
+    }
+
+    setLoading(false);
   };
 
   const handleSocialLoginFailure = e =>  console.log(e)
@@ -68,11 +84,21 @@ const Login = ({user}) => {
       >
           <SocialLoginButton
             provider='google'
+<<<<<<< HEAD
             appId={GOOGLE_CLIENT_ID}
+=======
+            appId='923672546587-olmscr5jlopvabts1mlme9duqj6or86h.apps.googleusercontent.com'
+>>>>>>> 417e05a56385d3eab9b979b7826829ae5a17e0bd
             onLoginSuccess={handleSocialLogin}
             onLoginFailure={handleSocialLoginFailure}
+            disabled={loading}
           >
-            Login with Google
+            {
+              loading ?
+              <CircularProgress size={24} />
+              :
+              'Login with Google'
+            }
           </SocialLoginButton>
       </Paper>
     </div>
@@ -81,6 +107,7 @@ const Login = ({user}) => {
 
 const mapStateRoProps = (state) => ({
   user: state.user.value._profile,
+  token: state.user.value._token
 })
 
 export default connect(mapStateRoProps)(Login);
