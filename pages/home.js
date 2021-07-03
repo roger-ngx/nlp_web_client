@@ -24,16 +24,11 @@ const Home = () => {
 
     const [ projects, setProjects ] = useState([]);
 
-<<<<<<< HEAD
-    dispatch(fetchDatasetItems(user.id));
-  }, [user]);
-=======
     useEffect(() => {
         if(user){
             getProjects();
         }
     }, [user]);
->>>>>>> 417e05a56385d3eab9b979b7826829ae5a17e0bd
 
     const getProjects = async () => {
         const res = await fetch(`http://localhost:8051/api/project/${user.id}`, {

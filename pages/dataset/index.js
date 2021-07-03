@@ -135,11 +135,7 @@ const Dataset = ({user, dataSet, currentProject}) => {
         data.append('datasetName', datasetName);
         data.append('datasetType', datasetType);
 
-<<<<<<< HEAD
-        fetch(`http://localhost:3001/api/file/upload`, {
-=======
         fetch(`http://localhost:8051/api/file/upload`, {
->>>>>>> 417e05a56385d3eab9b979b7826829ae5a17e0bd
             method: 'POST',
             body: data,
             mode: 'cors'
