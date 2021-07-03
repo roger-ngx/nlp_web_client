@@ -9,12 +9,12 @@ import Layout from '../components/layout';
 import SocialLoginButton from '../components/SocialLoginButton';
 import { setUser } from '../stores/userSlice';
 
+const GOOGLE_CLIENT_ID = '923672546587-olmscr5jlopvabts1mlme9duqj6or86h.apps.googleusercontent.com';
 
 const Login = ({user}) => {
 
   const dispatch = useDispatch();
 
-  const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
   console.log('GOOGLE_CLIENT_ID', GOOGLE_CLIENT_ID);
   const router = useRouter();
 
@@ -68,7 +68,7 @@ const Login = ({user}) => {
       >
           <SocialLoginButton
             provider='google'
-            appId='75262550263-6ne1rfsalhpnrqsps6938ubguimjbl73.apps.googleusercontent.com'
+            appId={GOOGLE_CLIENT_ID}
             onLoginSuccess={handleSocialLogin}
             onLoginFailure={handleSocialLoginFailure}
           >

@@ -22,7 +22,7 @@ const Home= ({user}) => {
       return;
     }
 
-    fetchDatasetItems(user.id);
+    dispatch(fetchDatasetItems(user.id));
   }, [user]);
 
   return (
